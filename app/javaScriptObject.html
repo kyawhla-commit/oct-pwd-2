@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Object</title>
+</head>
+<body>
+    <script>
+        let user = {
+            name: "Alice", 
+            hello: function() {
+                console.log(`Hello ${this.name}`)
+            }
+        };
+
+        class Animal  {
+            constructor(name) {
+                this.name = name;
+            }
+
+            hello() {
+                console.log(`Hello ${this.name}`);
+            }
+
+
+        }
+
+        class Dog extends Animal {
+            run() {
+                console.log(` ${this.name} is running...`)
+            }
+        }
+
+        let dog = new Dog("Bobby");
+
+        //array destructure
+        // let arr = [11, 22, 33]
+        // let [a, b] = arr
+        //output  a = 11, b = 22
+
+        // object destructure
+        //let bob = {name: "Bob", age: 22}
+        // let {name, age} = bob
+        //output name = "bob", age = 22
+    </script>
+</body>
+</html>
