@@ -7,13 +7,16 @@
     <title>Todo List</title>
     <link rel="stylesheet" href="css/all.min.css">
     <link rel="stylesheet" href="css/bootstrap.min.css">
-    <script src="js/bootstrap.bundle.min.js" defer></script>
+    <!-- <script src="js/bootstrap.bundle.min.js" defer></script> -->
 </head>
 
 <body>
     <nav class="navbar bg-dark navbar-dark">
         <div class="container" style="max-width: 600px;">
-            <a href="#" class="navbar-brand">Todo</a>
+            <a href="#" class="navbar-brand">
+                Todo
+                <span class="badge bg-danger ms-2 rounded-pill">0</span>
+            </a>
         </div>
     </nav>
     <div class="container" style="max-width: 600px;">
@@ -23,6 +26,7 @@
         </form>
 
         <ul id="todo" class="list-group"></ul>
+        <ul id="done" class="list-group opacity-50 my-4"></ul>
     </div>
     <script>
         // document.querySelector("input").onkeydown = e => {
@@ -30,6 +34,12 @@
         //         document.querySelector("button").onclick()
         //     }
         // }
+
+        function updateCount() {
+            document.querySelector(".badge").textContent = 
+                document.querySelectorAll("#todo li").length
+        }
+        
         document.querySelector("form").onsubmit = e => {
             e.preventDefault()
 
@@ -37,7 +47,7 @@
             if (text == "") return false
 
             createItem(text);
-
+            updateCount()
             e.currentTarget.reset()
             // document.querySelector("input").value = ""
             // document.querySelector("input").focus()
@@ -50,12 +60,22 @@
 
             let del = document.createElement("a");
             del.setAttribute("href", "#");
-            del.classList.add("fa-solid", "fa-trash", "fa-danger", "float-end")
+            del.classList.add("fa-solid", "fa-trash", "text-danger", "float-end")
             del.onclick = () => {
                 li.remove()
+                updateCount()
             }
             li.appendChild(del);
 
+            let check = document.createElement("a");
+            check.setAttribute("href", "#");
+            check.classList.add("fa-solid", "fa-check", "me-2", "float-start");
+            check.onclick = () => {
+                document.querySelector("#done").appendChild(li)
+                check.remove()
+                updateCount()
+            }
+            li.appendChild(check)
             document.querySelector('#todo').appendChild(li);
 
         }
