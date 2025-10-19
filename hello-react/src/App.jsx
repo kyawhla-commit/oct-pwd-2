@@ -1,20 +1,88 @@
-function Item({ item }) {
-  return <li>{item.name}</li>;
-}
+import {
+  OutlinedInput,
+  Box,
+  Typography,
+  List,
+  IconButton,
+  Divider,
+  Container,
+} from "@mui/material";
+
+import { Add as AddIcon } from "@mui/icons-material";
+import { useRef, useState } from "react";
+import Item from "./Item";
+import Header from "./Header";
+
 export default function App() {
-  const data = [
-    { id: 3, name: "Egg" },
-    { id: 2, name: "Bread" },
-    { id: 1, name: "Butter" },
-  ];
+  const inputRef = useRef();
+
+  const [data, setData] = useState([
+    { id: 3, name: "Egg", done: true },
+    { id: 2, name: "Bread", done: false },
+    { id: 1, name: "Butter", done: false },
+  ]);
+
+  const add = () => {
+    const id = data[0].id + 1;
+
+    const name = inputRef.current.value;
+    if (name == "") return false;
+    setData([{ id, name, done: false }, ...data]);
+  };
+
+  const del = (id) => {
+    setData(data.filter((item) => item.id !== id));
+  };
+
+  const toggle = (id) => {
+    setData(
+      data.map((item) => {
+        if (item.id === id) {
+          item.done = !item.done;
+        }
+        return item;
+      })
+    );
+  };
   return (
     <div>
-      <h1>Hello React</h1>
-      <ul>
-        {data.map((item) => (
-          <Item item={item} />
-        ))}
-      </ul>
+      <Header count={data.length} />
+      <Container maxWidth="sm" sx={{ mt: 4 }}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            add();
+            e.currentTarget.reset();
+          }}
+        >
+          <OutlinedInput
+            fullWidth
+            type="text"
+            inputRef={inputRef}
+            endAdornment={
+              <IconButton type="submit">
+                <AddIcon />
+              </IconButton>
+            }
+          />
+        </form>
+
+        <List>
+          {data
+            .filter((item) => !item.done)
+            .map((item) => (
+              <Item key={item.id} item={item} del={del} toggle={toggle} />
+            ))}
+        </List>
+        <Divider />
+        <List>
+          {data
+            .filter((item) => item.done)
+            .map((item) => (
+              <Item key={item.id} item={item} del={del} toggle={toggle} />
+            ))}
+        </List>
+      </Container>
     </div>
   );
 }
