@@ -2,6 +2,7 @@ import {
   OutlinedInput,
   Box,
   Typography,
+  TextField,
   List,
   IconButton,
   Divider,
@@ -55,15 +56,18 @@ export default function App() {
             e.currentTarget.reset();
           }}
         >
-          <OutlinedInput
+          <TextField
+            variant="outlined"
             fullWidth
-            type="text"
+            label="Add new item"
             inputRef={inputRef}
-            endAdornment={
-              <IconButton type="submit">
-                <AddIcon />
-              </IconButton>
-            }
+            InputProps={{
+              endAdornment: (
+                <IconButton type="submit">
+                  <AddIcon />
+                </IconButton>
+              ),
+            }}
           />
         </form>
 
