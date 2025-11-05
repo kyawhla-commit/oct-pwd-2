@@ -10,18 +10,39 @@ import {
 } from "@mui/material";
 
 import { Add as AddIcon } from "@mui/icons-material";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Item from "./Item";
 import Header from "./Header";
+
+const api = "http://localhost:8800/items";
 
 export default function App() {
   const inputRef = useRef();
 
-  const [data, setData] = useState([
-    { id: 3, name: "Egg", done: true },
-    { id: 2, name: "Bread", done: false },
-    { id: 1, name: "Butter", done: false },
-  ]);
+  const [data, setData] = useState([]);
+
+  // useEffect(() => {
+  //   fetch(api).then((res) => {
+  //     res.json().then((json) => {
+  //       setData(json);
+  //     });
+  //   });
+  // }, []);
+
+  // useEffect(() => {
+  //   (async () => {
+  //     const res = await fetch(api);
+  //     const json = await res.json();
+  //     setData(json);
+  //   })();
+  // }, []);
+
+  useEffect(() => {
+    fetch(api).then(async (res) => {
+      const json = await res.json();
+      setData(json);
+    });
+  }, []);
 
   const add = () => {
     const id = data[0].id + 1;
@@ -45,9 +66,12 @@ export default function App() {
       })
     );
   };
+  const clear = () => {
+    setData(data.filter(item => !item.done))
+  }
   return (
     <div>
-      <Header count={data.length} />
+      <Header count={data.length} clear={clear} />
       <Container maxWidth="sm" sx={{ mt: 4 }}>
         <form
           onSubmit={(e) => {

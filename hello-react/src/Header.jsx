@@ -1,15 +1,16 @@
-import { AppBar, Badge, Toolbar, Box, Typography, IconButton, } from "@mui/material"
+import { AppBar, Badge, Toolbar, Box, Typography, IconButton, Button, Container, } from "@mui/material"
 
 import { LightMode as LightModeIcon, DarkMode as DarkModeIcon} from "@mui/icons-material"
 
 import { useApp } from "./AppProvider"
 
-export default function Header( {count, }) {
+export default function Header( {count, clear }) {
     const { mode, setMode} = useApp();
     
     return (
         <AppBar position="static">
             <Toolbar>
+                <Container maxWidth="sm" sx={{display: "flex"}}>
                 <Box sx={{ flexGrow: 1}}>
                     <Badge
                     badgeContent={count}
@@ -18,6 +19,7 @@ export default function Header( {count, }) {
                     <Typography>Todo</Typography>
                 </Badge>
                 </Box>
+                <Button color="light" onClick={clear}>clear</Button>
                 {
                     mode === "dark" ? (
                         <IconButton color="inherit" onClick={() => setMode("light")}>
@@ -29,6 +31,7 @@ export default function Header( {count, }) {
                         </IconButton>
                     )
                 }
+                </Container>
             </Toolbar>
         </AppBar>
     )
