@@ -1,26 +1,16 @@
-import {
-  OutlinedInput,
-  Box,
-  Typography,
-  TextField,
-  List,
-  IconButton,
-  Divider,
-  Container,
-} from "@mui/material";
+import { TextField, List, IconButton, Divider, Container } from "@mui/material";
 
 import { Add as AddIcon } from "@mui/icons-material";
 import { useEffect, useRef, useState } from "react";
 import Item from "./Item";
 import Header from "./Header";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const api = "http://localhost:8800/items";
 
 export default function App() {
   const inputRef = useRef();
-
-  const [data, setData] = useState([]);
-
+  const queryClient = useQueryClient();
   // useEffect(() => {
   //   fetch(api).then((res) => {
   //     res.json().then((json) => {
@@ -37,37 +27,49 @@ export default function App() {
   //   })();
   // }, []);
 
-  useEffect(() => {
-    fetch(api).then(async (res) => {
-      const json = await res.json();
-      setData(json);
-    });
-  }, []);
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["items"],
+    queryFn: async () => {
+      const res = await fetch(api);
+      return res.json();
+    },
+  });
 
-  const add = () => {
-    const id = data[0].id + 1;
-
+  const add = async () => {
     const name = inputRef.current.value;
     if (name == "") return false;
-    setData([{ id, name, done: false }, ...data]);
+    await fetch(api, {
+      method: "POST",
+      body: JSON.stringify({ name }),
+      headers: {
+        "Content-type": "Application/json",
+      },
+    });
+
+    queryClient.invalidateQueries(["items"]);
   };
 
-  const del = (id) => {
-    setData(data.filter((item) => item.id !== id));
+  const del = async (id) => {
+    await fetch(`${api}/${id}`, {
+      method: "DELETE",
+    });
+    queryClient.invalidateQueries(["items"]);
   };
 
-  const toggle = (id) => {
-    setData(
-      data.map((item) => {
-        if (item.id === id) {
-          item.done = !item.done;
-        }
-        return item;
-      })
-    );
+  const toggle = async (id) => {
+    await fetch(`${api}/${id}/toggle`, {
+      method: "PUT",
+    });
+    queryClient.invalidateQueries(["items"]);
   };
   const clear = () => {
-    setData(data.filter(item => !item.done))
+    setData(data.filter((item) => !item.done));
+  };
+  if (error) {
+    return <div>Unable to fetch Api</div>;
+  }
+  if (isLoading) {
+    return <div>Loading...</div>;
   }
   return (
     <div>
