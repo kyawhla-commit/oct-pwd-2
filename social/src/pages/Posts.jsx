@@ -1,7 +1,15 @@
-import { Box, Typography } from "@mui/material";
-
-export default function Post() {
+import { Box, Typography, OutlinedInput, Button } from "@mui/material";
+import Post from "../components/Post";
+export default function Posts() {
     return <Box>
-        <Typography variant="h1">Post</Typography>
+         <Box sx={{ mb: 2, textAlign: "right"}}>
+            <form >
+            <OutlinedInput fullWidth placeholder="what's on your mind..." sx={{ mb:1}}></OutlinedInput>
+            <Button variant="contained">Add Post</Button>
+        </form>
+        </Box>
+        <Post/>
+        <Post/>
+        <Post/>
     </Box>
 }
